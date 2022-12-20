@@ -4,8 +4,17 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
+import cn.edu.sustech.dbms2.client.ThrowableHandler;
+import cn.edu.sustech.dbms2.client.packet.client.CityCountPacket;
+import cn.edu.sustech.dbms2.client.packet.client.CompanyCountPacket;
+import cn.edu.sustech.dbms2.client.packet.client.CourierCountPacket;
 import cn.edu.sustech.dbms2.client.packet.client.LoginPacket;
+import cn.edu.sustech.dbms2.client.packet.client.ShipCountPacket;
+import cn.edu.sustech.dbms2.client.packet.server.CityCountInfoPacket;
+import cn.edu.sustech.dbms2.client.packet.server.CompanyCountInfoPacket;
+import cn.edu.sustech.dbms2.client.packet.server.CourierCountInfoPacket;
 import cn.edu.sustech.dbms2.client.packet.server.LoginInfoPacket;
+import cn.edu.sustech.dbms2.client.packet.server.ShipCountInfoPacket;
 
 
 public class PacketManager {
@@ -21,6 +30,16 @@ public class PacketManager {
 		packetCodes = new HashMap<>();
 		packetCodes.put(LoginPacket.getStaticCode(), LoginPacket.class);
 		packetCodes.put(LoginInfoPacket.getStaticCode(), LoginInfoPacket.class);
+		packetCodes.put(CompanyCountPacket.getStaticCode(), CompanyCountPacket.class);
+		packetCodes.put(CompanyCountInfoPacket.getStaticCode(), CompanyCountInfoPacket.class);
+		packetCodes.put(CityCountPacket.getStaticCode(), CityCountPacket.class);
+		packetCodes.put(CityCountInfoPacket.getStaticCode(), CityCountInfoPacket.class);
+		packetCodes.put(CourierCountPacket.getStaticCode(), CourierCountPacket.class);
+		packetCodes.put(CourierCountInfoPacket.getStaticCode(), CourierCountInfoPacket.class);
+		packetCodes.put(ShipCountPacket.getStaticCode(), ShipCountPacket.class);
+		packetCodes.put(ShipCountInfoPacket.getStaticCode(), ShipCountInfoPacket.class);
+		
+		
 	}
 	
 	public static PacketManager getInstance() {
@@ -40,7 +59,7 @@ public class PacketManager {
 			Constructor<? extends Packet> constructor = packetClazz.getConstructor(String.class);
 			return constructor.newInstance(context);
 		} catch (Exception e) {
-			//ThrowableHandler.handleThrowable(e);
+			ThrowableHandler.handleThrowable(e);
 		}
 		return null;
 	}

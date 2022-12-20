@@ -44,16 +44,19 @@ public class LoginInfoPacket extends Packet {
 
 	public LoginInfoPacket(String context) {
 		this.context = context;
-		this.info = this.context.split("$");
+		this.info = this.context.split("[$]");
 		this.isSuccess = this.info[0].equals("1");
+		if (!isSuccess) {
+			return;
+		}
 		this.cookie = this.info[1];
 		this.user = this.info[2];
 		this.staffType = this.info[3];
-		this.city = this.info[4].equals("$null$") ? null : this.info[4];
-		this.company = this.info[5].equals("$null$") ? null : this.info[4];
+		this.city = this.info[4].equals("@null@") ? null : this.info[4];
+		this.company = this.info[5].equals("@null@") ? null : this.info[4];
 		this.gender = Boolean.parseBoolean(this.info[6]);
 		this.phone = this.info[7];
-		this.age = Calendar.getInstance().get(Calendar.YEAR) - Integer.parseInt(this.info[8]);
+		this.age = Integer.parseInt(this.info[8]);
 	}
 	
 	@Override

@@ -12,7 +12,7 @@ import cn.edu.sustech.dbms2.client.packet.PacketManager;
 
 public class DBClient {
 	
-	private static final String host = "localhost";
+	private static final String host = "127.0.0.1";
 	private static final int port = 23333;
 	
 	public DBClient() {}
@@ -21,18 +21,23 @@ public class DBClient {
 		try {
 			Socket socket = new Socket();
 			socket.setSoTimeout(10000);
+			socket.setKeepAlive(true);
+			socket.setOOBInline(true);
 			socket.connect(new InetSocketAddress(host, port));
 			BufferedOutputStream writer = new BufferedOutputStream(socket.getOutputStream());
 			writer.write((packet.getCode() + "@" + packet.getContext()).getBytes());
 			writer.flush();
-			writer.close();
 			BufferedInputStream input = new BufferedInputStream(socket.getInputStream());
 			byte[] bytes = new byte[1024 * 8];
 			int len;
 			if ((len = input.read(bytes)) != -1) {
+				writer.close();
+				input.close();
 				socket.close();
 				return PacketManager.getInstance().receivePacket(len, bytes);
 			}
+			writer.close();
+			input.close();
 			socket.close();
 		} catch (SocketException e) {
 			e.printStackTrace();

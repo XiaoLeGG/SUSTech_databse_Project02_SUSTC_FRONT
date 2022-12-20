@@ -138,7 +138,11 @@ public class LobbyView {
 					if (packet.isSuccess()) {
 						((Label) layout.getHeading().get(0)).setText("登录");
 						((Label) layout.getBody().get(0)).setText("登录成功！");
-						dialog.close();
+						closeButton.setText("确认");
+						closeButton.setStyle("-fx-text-fill: #03A9F4");
+						closeButton.setDisable(false);
+						this.getStage().hide();
+						new UserView(packet).getStage().show();
 					} else {
 						((Label) layout.getHeading().get(0)).setText("错误");
 						((Label) layout.getBody().get(0)).setText("登录失败，请检查账号与密码。");

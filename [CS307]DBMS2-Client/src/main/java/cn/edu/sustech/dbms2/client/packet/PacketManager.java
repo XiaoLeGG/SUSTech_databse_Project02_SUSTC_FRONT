@@ -8,14 +8,21 @@ import cn.edu.sustech.dbms2.client.ThrowableHandler;
 import cn.edu.sustech.dbms2.client.packet.client.CityCountPacket;
 import cn.edu.sustech.dbms2.client.packet.client.CompanyCountPacket;
 import cn.edu.sustech.dbms2.client.packet.client.CourierCountPacket;
+import cn.edu.sustech.dbms2.client.packet.client.ItemPacket;
 import cn.edu.sustech.dbms2.client.packet.client.LoginPacket;
 import cn.edu.sustech.dbms2.client.packet.client.ShipCountPacket;
+import cn.edu.sustech.dbms2.client.packet.client.ShipPacket;
+import cn.edu.sustech.dbms2.client.packet.client.StaffPacket;
 import cn.edu.sustech.dbms2.client.packet.server.CityCountInfoPacket;
 import cn.edu.sustech.dbms2.client.packet.server.CompanyCountInfoPacket;
+import cn.edu.sustech.dbms2.client.packet.server.ContainerInfoPacket;
 import cn.edu.sustech.dbms2.client.packet.server.CourierCountInfoPacket;
+import cn.edu.sustech.dbms2.client.packet.server.ItemInfoPacket;
 import cn.edu.sustech.dbms2.client.packet.server.LoginInfoPacket;
 import cn.edu.sustech.dbms2.client.packet.server.ShipCountInfoPacket;
-
+import cn.edu.sustech.dbms2.client.packet.server.ShipInfoPacket;
+import cn.edu.sustech.dbms2.client.packet.server.StaffInfoPacket;
+import cn.edu.sustech.dbms2.client.packet.client.ContainerPacket;
 
 public class PacketManager {
 	
@@ -38,8 +45,14 @@ public class PacketManager {
 		packetCodes.put(CourierCountInfoPacket.getStaticCode(), CourierCountInfoPacket.class);
 		packetCodes.put(ShipCountPacket.getStaticCode(), ShipCountPacket.class);
 		packetCodes.put(ShipCountInfoPacket.getStaticCode(), ShipCountInfoPacket.class);
-		
-		
+		packetCodes.put(ContainerPacket.getStaticCode(), ContainerPacket.class);
+		packetCodes.put(ContainerInfoPacket.getStaticCode(), ContainerInfoPacket.class);
+		packetCodes.put(ShipPacket.getStaticCode(), ShipPacket.class);
+		packetCodes.put(ShipInfoPacket.getStaticCode(), ShipInfoPacket.class);
+		packetCodes.put(ItemPacket.getStaticCode(), ItemPacket.class);
+		packetCodes.put(ItemInfoPacket.getStaticCode(), ItemInfoPacket.class);
+		packetCodes.put(StaffPacket.getStaticCode(), StaffPacket.class);
+		packetCodes.put(StaffInfoPacket.getStaticCode(), StaffInfoPacket.class);
 	}
 	
 	public static PacketManager getInstance() {

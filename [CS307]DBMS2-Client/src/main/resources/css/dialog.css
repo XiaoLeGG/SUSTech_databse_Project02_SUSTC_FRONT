@@ -12,11 +12,35 @@
     -fx-font-size: 20.0px;
 }
 
-.dialog-accept {
-		-fx-background-color: rgba(0, 0, 0, 0);
+.jfx-button {
+    -fx-background-color: rgba(0, 0, 0, 0);
     -fx-text-fill: #03A9F4;
     -fx-font-weight: BOLD;
     -fx-padding: 0.7em 0.8em;
     -fx-font-size: 16.0px;
     -jfx-button-type: FLAT;
+}
+
+.dialog-accept {
+	-fx-background-color: rgba(0, 0, 0, 0);
+    -fx-text-fill: #03A9F4;
+    -fx-font-weight: BOLD;
+    -fx-padding: 0.7em 0.8em;
+    -fx-font-size: 16.0px;
+    -jfx-button-type: FLAT;
+}
+
+.combo-box-popup .list-view .jfx-list-cell {
+    -fx-background-insets: 0.0;
+    -fx-text-fill: BLACK;
+}
+
+.combo-box-popup .list-view .jfx-list-cell:filled:selected {
+    -fx-text-fill: BLACK;
+    -fx-background-color: WHITE;
+}
+
+.combo-box-popup .list-view .jfx-list-cell:filled:hover {
+    -fx-text-fill: WHITE;
+    -fx-background-color: #1e1c1c;
 }

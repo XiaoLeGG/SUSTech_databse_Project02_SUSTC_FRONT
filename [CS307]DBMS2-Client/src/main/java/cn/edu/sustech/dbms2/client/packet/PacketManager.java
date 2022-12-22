@@ -10,6 +10,8 @@ import cn.edu.sustech.dbms2.client.packet.client.CompanyCountPacket;
 import cn.edu.sustech.dbms2.client.packet.client.CourierCountPacket;
 import cn.edu.sustech.dbms2.client.packet.client.ItemPacket;
 import cn.edu.sustech.dbms2.client.packet.client.LoginPacket;
+import cn.edu.sustech.dbms2.client.packet.client.NewItemPacket;
+import cn.edu.sustech.dbms2.client.packet.client.SetItemStatePacket;
 import cn.edu.sustech.dbms2.client.packet.client.ShipCountPacket;
 import cn.edu.sustech.dbms2.client.packet.client.ShipPacket;
 import cn.edu.sustech.dbms2.client.packet.client.StaffPacket;
@@ -19,6 +21,8 @@ import cn.edu.sustech.dbms2.client.packet.server.ContainerInfoPacket;
 import cn.edu.sustech.dbms2.client.packet.server.CourierCountInfoPacket;
 import cn.edu.sustech.dbms2.client.packet.server.ItemInfoPacket;
 import cn.edu.sustech.dbms2.client.packet.server.LoginInfoPacket;
+import cn.edu.sustech.dbms2.client.packet.server.NewItemInfoPacket;
+import cn.edu.sustech.dbms2.client.packet.server.SetItemStateInfoPacket;
 import cn.edu.sustech.dbms2.client.packet.server.ShipCountInfoPacket;
 import cn.edu.sustech.dbms2.client.packet.server.ShipInfoPacket;
 import cn.edu.sustech.dbms2.client.packet.server.StaffInfoPacket;
@@ -53,6 +57,10 @@ public class PacketManager {
 		packetCodes.put(ItemInfoPacket.getStaticCode(), ItemInfoPacket.class);
 		packetCodes.put(StaffPacket.getStaticCode(), StaffPacket.class);
 		packetCodes.put(StaffInfoPacket.getStaticCode(), StaffInfoPacket.class);
+		packetCodes.put(NewItemPacket.getStaticCode(), NewItemPacket.class);
+		packetCodes.put(NewItemInfoPacket.getStaticCode(), NewItemInfoPacket.class);
+		packetCodes.put(SetItemStatePacket.getStaticCode(), SetItemStatePacket.class);
+		packetCodes.put(SetItemStateInfoPacket.getStaticCode(), SetItemStateInfoPacket.class);
 	}
 	
 	public static PacketManager getInstance() {

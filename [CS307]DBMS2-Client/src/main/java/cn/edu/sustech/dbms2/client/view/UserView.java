@@ -1,6 +1,7 @@
 package cn.edu.sustech.dbms2.client.view;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -26,6 +27,8 @@ import cn.edu.sustech.dbms2.client.packet.client.CompanyCountPacket;
 import cn.edu.sustech.dbms2.client.packet.client.ContainerPacket;
 import cn.edu.sustech.dbms2.client.packet.client.CourierCountPacket;
 import cn.edu.sustech.dbms2.client.packet.client.ItemPacket;
+import cn.edu.sustech.dbms2.client.packet.client.NewItemPacket;
+import cn.edu.sustech.dbms2.client.packet.client.SetItemStatePacket;
 import cn.edu.sustech.dbms2.client.packet.client.ShipCountPacket;
 import cn.edu.sustech.dbms2.client.packet.client.ShipPacket;
 import cn.edu.sustech.dbms2.client.packet.client.StaffPacket;
@@ -35,6 +38,8 @@ import cn.edu.sustech.dbms2.client.packet.server.ContainerInfoPacket;
 import cn.edu.sustech.dbms2.client.packet.server.CourierCountInfoPacket;
 import cn.edu.sustech.dbms2.client.packet.server.ItemInfoPacket;
 import cn.edu.sustech.dbms2.client.packet.server.LoginInfoPacket;
+import cn.edu.sustech.dbms2.client.packet.server.NewItemInfoPacket;
+import cn.edu.sustech.dbms2.client.packet.server.SetItemStateInfoPacket;
 import cn.edu.sustech.dbms2.client.packet.server.ShipCountInfoPacket;
 import cn.edu.sustech.dbms2.client.packet.server.ShipInfoPacket;
 import cn.edu.sustech.dbms2.client.packet.server.StaffInfoPacket;
@@ -549,9 +554,15 @@ public class UserView {
 			dialog.setTransitionType(DialogTransition.CENTER);
 			JFXDialogLayout layout = new JFXDialogLayout();
 			layout.setHeading(new Label("新建项目"));
+			
+			HBox dBox = new HBox();
+			dBox.setPrefSize(650, 300);
+			dBox.setMinSize(650, 300);
+			dBox.setSpacing(25);
+			
 			VBox vbox = new VBox();
-			vbox.setPrefSize(300, 400);
-			vbox.setSpacing(10);
+			vbox.setPrefSize(300, 300);
+			vbox.setSpacing(20);
 			
 			HBox nameBox = new HBox();
 			TextFlow nameTitle = new TextFlow();
@@ -620,8 +631,8 @@ public class UserView {
 			stateCB.getStylesheets().add(getClass().getResource("/css/scrollpane.css").toExternalForm());
 			
 			
-			stateCB.getSelectionModel().select(0);
 			stateCB.setItems(FXCollections.observableArrayList(stateList));
+			stateCB.getSelectionModel().select(0);
 			
 			stateTitle.getChildren().add(stateText);
 
@@ -655,7 +666,7 @@ public class UserView {
 			retrCourierField.setValidators(retrCourierValid);
 			retrCourierBox.getChildren().addAll(retrCourierTitle, retrCourierField);
 			vbox.getChildren().add(retrCourierBox);
-			
+				
 			HBox deliCityBox = new HBox();
 			TextFlow deliCityTitle = new TextFlow();
 			Text deliCityText = new Text("寄送城市: ");
@@ -670,6 +681,10 @@ public class UserView {
 			deliCityBox.getChildren().addAll(deliCityTitle, deliCityField);
 			vbox.getChildren().add(deliCityBox);
 			
+			VBox vbox2 = new VBox();
+			vbox2.setPrefSize(300, 300);
+			vbox2.setSpacing(20);
+			
 			HBox deliCourierBox = new HBox();
 			TextFlow deliCourierTitle = new TextFlow();
 			Text deliCourierText = new Text("寄送快递员: ");
@@ -677,7 +692,7 @@ public class UserView {
 			deliCourierTitle.getChildren().add(deliCourierText);
 			JFXTextField deliCourierField = new JFXTextField();
 			deliCourierBox.getChildren().addAll(deliCourierTitle, deliCourierField);
-			vbox.getChildren().add(deliCourierBox);
+			vbox2.getChildren().add(deliCourierBox);
 			
 			HBox importCityBox = new HBox();
 			TextFlow importCityTitle = new TextFlow();
@@ -691,7 +706,7 @@ public class UserView {
 			importCityValid.setIcon(importCityTri);
 			importCityField.setValidators(importCityValid);
 			importCityBox.getChildren().addAll(importCityTitle, importCityField);
-			vbox.getChildren().add(importCityBox);
+			vbox2.getChildren().add(importCityBox);
 			
 			HBox importTaxBox = new HBox();
 			TextFlow importTaxTitle = new TextFlow();
@@ -722,7 +737,7 @@ public class UserView {
 			importNumberValid.setIcon(importNumberTri);
 			importTaxField.setValidators(importTaxValid, importNumberValid);
 			importTaxBox.getChildren().addAll(importTaxTitle, importTaxField);
-			vbox.getChildren().add(importTaxBox);
+			vbox2.getChildren().add(importTaxBox);
 			
 			HBox importOfficerBox = new HBox();
 			TextFlow importOfficerTitle = new TextFlow();
@@ -731,7 +746,7 @@ public class UserView {
 			importOfficerTitle.getChildren().add(importOfficerText);
 			JFXTextField importOfficerField = new JFXTextField();
 			importOfficerBox.getChildren().addAll(importOfficerTitle, importOfficerField);
-			vbox.getChildren().add(importOfficerBox);
+			vbox2.getChildren().add(importOfficerBox);
 			
 			HBox exportCityBox = new HBox();
 			TextFlow exportCityTitle = new TextFlow();
@@ -745,7 +760,7 @@ public class UserView {
 			exportCityValid.setIcon(exportCityTri);
 			exportCityField.setValidators(exportCityValid);
 			exportCityBox.getChildren().addAll(exportCityTitle, exportCityField);
-			vbox.getChildren().add(exportCityBox);
+			vbox2.getChildren().add(exportCityBox);
 			
 			HBox exportTaxBox = new HBox();
 			TextFlow exportTaxTitle = new TextFlow();
@@ -776,7 +791,7 @@ public class UserView {
 			exportNumberValid.setIcon(exportNumberTri);
 			exportTaxField.setValidators(exportTaxValid, exportNumberValid);
 			exportTaxBox.getChildren().addAll(exportTaxTitle, exportTaxField);
-			vbox.getChildren().add(exportTaxBox);
+			vbox2.getChildren().add(exportTaxBox);
 			
 			HBox exportOfficerBox = new HBox();
 			TextFlow exportOfficerTitle = new TextFlow();
@@ -785,9 +800,10 @@ public class UserView {
 			exportOfficerTitle.getChildren().add(exportOfficerText);
 			JFXTextField exportOfficerField = new JFXTextField();
 			exportOfficerBox.getChildren().addAll(exportOfficerTitle, exportOfficerField);
-			vbox.getChildren().add(exportOfficerBox);
+			vbox2.getChildren().add(exportOfficerBox);
 			
-			layout.setBody(vbox);
+			dBox.getChildren().addAll(vbox, vbox2);
+			layout.setBody(dBox);
 			
 			JFXButton closeButton = new JFXButton("关闭");
 			closeButton.setStyle("-fx-text-fill: #ff0000");
@@ -795,6 +811,47 @@ public class UserView {
 				dialog.close();
 			});
 			JFXButton submitButton = new JFXButton("提交");
+			submitButton.setOnAction(e1 -> {
+				if (nameField.validate() && typeField.validate() && priceField.validate() 
+						&& retrCityField.validate() && retrCourierField.validate()
+						&& deliCityField.validate() && deliCourierField.validate()
+						&& importCityField.validate() && importTaxField.validate() && importOfficerField.validate()
+						&& exportCityField.validate() && exportTaxField.validate() && exportOfficerField.validate()) {
+					dialog.close();
+					String deliCourier = deliCourierField.getText();
+					if (deliCourier != null && deliCourier.isEmpty()) {
+						deliCourier = null;
+					}
+					String importOfficer = importOfficerField.getText();
+					if (importOfficer != null && importOfficer.isEmpty()) {
+						importOfficer = null;
+					}
+					String exportOfficer = exportOfficerField.getText();
+					if (exportOfficer != null && exportOfficer.isEmpty()) {
+						exportOfficer = null;
+					}
+					ItemInfo info = new ItemInfo(nameField.getText(), typeField.getText(), Double.parseDouble(priceField.getText()),
+							stringStateMap.get(stateCB.getSelectionModel().getSelectedItem()),
+							new RetrievalDeliveryInfo(retrCityField.getText(), retrCourierField.getText()),
+							new RetrievalDeliveryInfo(deliCityField.getText(), deliCourier),
+							new ImportExportInfo(importCityField.getText(), importOfficer, Double.parseDouble(importTaxField.getText())),
+							new ImportExportInfo(exportCityField.getText(), exportOfficer, Double.parseDouble(exportTaxField.getText())));
+					DBClient client = new DBClient();
+					NewItemInfoPacket infoPacket;
+					try {
+						infoPacket = (NewItemInfoPacket) client.sendAndReceivePacket(new NewItemPacket(this.cookie, info));
+						if (infoPacket.isSuccess()) {
+							this.showDialog("新建项目成功", top, false);
+						} else {
+							this.showDialog("新建项目失败", top, true);
+						}
+					} catch (IOException e2) {
+						this.showDialog("新建项目失败", top, true);
+					}
+					
+				}
+			});
+			
 			
 			layout.setActions(closeButton, submitButton);
 			dialog.setContent(layout);
@@ -802,6 +859,55 @@ public class UserView {
 			dialog.show();
 		});
 		leftBox.getChildren().add(newItemButton);
+		
+		VBox setStateBox = new VBox();
+		setStateBox.setSpacing(5);
+		JFXButton setStateButton = new JFXButton("设置物品状态");
+		HBox setStateHBox = new HBox();
+		TextFlow setStateFlow = new TextFlow();
+		Text setStateTitle = new Text("物品名称: ");
+		setStateTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 14");
+		
+		JFXTextField setStateNameTextField = new JFXTextField();
+		ValidatorBase setStateNameValid = new RequiredFieldValidator("物品名称不能为空");
+		FontIcon setStateNameTri = new FontIcon();
+		setStateNameTri.setIconLiteral("fas-exclamation-triangle");
+		setStateNameValid.setIcon(setStateNameTri);
+		setStateNameTextField.setValidators(setStateNameValid);
+		
+		setStateFlow.getChildren().add(setStateTitle);
+		setStateHBox.getChildren().addAll(setStateFlow, setStateNameTextField);
+		
+		HBox stateBox2 = new HBox();
+		TextFlow stateTitle2 = new TextFlow();
+		Text stateText2 = new Text("项目状态: ");
+		stateText2.setStyle("-fx-font-weight: bold; -fx-font-size: 14");
+		JFXComboBox<String> stateCB2 = new JFXComboBox<>();
+		stateCB2.getStylesheets().add(getClass().getResource("/css/scrollpane.css").toExternalForm());
+		stateCB2.setItems(FXCollections.observableArrayList(stateList));
+		stateCB2.getSelectionModel().select(0);
+		stateTitle2.getChildren().add(stateText2);
+		stateBox2.getChildren().addAll(stateTitle2, stateCB2);
+		setStateBox.getChildren().addAll(setStateButton, setStateHBox, stateBox2);
+		
+		setStateButton.setOnAction(e1 -> {
+			DBClient client = new DBClient();
+			try {
+				if (setStateNameTextField.validate()) {
+					SetItemStateInfoPacket packet = (SetItemStateInfoPacket) client.sendAndReceivePacket(new SetItemStatePacket(this.cookie, setStateNameTextField.getText(), stringStateMap.get(stateCB2.getSelectionModel().getSelectedItem())));
+					if (packet.isSuccess()) {
+						showDialog("设置成功", top, false);
+					} else {
+						showDialog("设置失败", top, true);
+					}
+				}
+			} catch (Exception e2) {
+				showDialog("设置失败", top, true);
+			}
+		});
+		
+		leftBox.getChildren().add(setStateBox);
+		
 		leftPane.getChildren().add(leftBox);
 	}
 	

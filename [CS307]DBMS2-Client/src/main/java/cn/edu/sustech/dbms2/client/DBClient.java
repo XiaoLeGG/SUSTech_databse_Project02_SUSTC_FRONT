@@ -17,6 +17,23 @@ public class DBClient {
 	
 	public DBClient() {}
 	
+	public void sendPacket(Packet packet) throws IOException {
+		try {
+			Socket socket = new Socket();
+			socket.setSoTimeout(10000);
+			socket.setKeepAlive(true);
+			socket.setOOBInline(true);
+			socket.connect(new InetSocketAddress(host, port));
+			BufferedOutputStream writer = new BufferedOutputStream(socket.getOutputStream());
+			writer.write((packet.getCode() + "@" + packet.getContext()).getBytes());
+			writer.flush();
+			writer.close();
+			socket.close();
+		} catch (SocketException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public Packet sendAndReceivePacket(Packet packet) throws IOException {
 		try {
 			Socket socket = new Socket();

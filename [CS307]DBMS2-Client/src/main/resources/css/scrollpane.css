@@ -11,6 +11,20 @@
     -fx-background-insets: 0;
 }
 
+.jfx-list-view .jfx-list-cell {
+    -fx-background-insets: 0.0;
+    -fx-text-fill: BLACK;
+}
+
+.jfx-list-view .jfx-list-cell:filled:selected {
+    -fx-text-fill: BLACK;
+    -fx-background-color: WHITE;
+}
+
+.jfx-list-view .jfx-list-cell:filled:hover {
+    -fx-text-fill: WHITE;
+    -fx-background-color: #1e1c1c;
+}
 
 /*******************************************************************************
  *                                                                             *

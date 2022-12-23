@@ -21,6 +21,15 @@
     -jfx-button-type: FLAT;
 }
 
+.page-button {
+    -fx-background-color: rgba(0, 0, 0, 0);
+    -fx-text-fill: #03A9F4;
+    -fx-font-weight: BOLD;
+    -fx-padding: 0.5em 0.5em;
+    -fx-font-size: 13.0px;
+    -jfx-button-type: FLAT;
+}
+
 .dialog-accept {
 	-fx-background-color: rgba(0, 0, 0, 0);
     -fx-text-fill: #03A9F4;

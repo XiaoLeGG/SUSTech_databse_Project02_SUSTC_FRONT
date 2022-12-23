@@ -26,6 +26,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextInputControl;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
@@ -166,6 +168,12 @@ public class LobbyView {
 		StackPane.setAlignment(vbox, Pos.TOP_CENTER);
 		pane.getChildren().add(vbox);
 		JFXDecorator dec = new JFXDecorator(stage, pane);
+		ImageView icon = new ImageView(new Image(getClass().getResourceAsStream("/icon.png")));
+		icon.setFitHeight(24);
+		icon.setFitWidth(24);
+		dec.setGraphic(icon);
+		this.stage.getIcons().clear();
+		this.stage.getIcons().add(new Image(getClass().getResourceAsStream("/icon.png")));
 		Scene scene = new Scene(dec, 900, 600);
 		stage.setScene(scene);
 	}

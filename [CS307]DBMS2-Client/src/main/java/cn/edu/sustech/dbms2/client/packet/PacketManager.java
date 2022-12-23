@@ -9,13 +9,16 @@ import cn.edu.sustech.dbms2.client.packet.client.CityCountPacket;
 import cn.edu.sustech.dbms2.client.packet.client.CompanyCountPacket;
 import cn.edu.sustech.dbms2.client.packet.client.CourierCountPacket;
 import cn.edu.sustech.dbms2.client.packet.client.ExportTaxRatePacket;
+import cn.edu.sustech.dbms2.client.packet.client.GetAllItemsAtPortPacket;
 import cn.edu.sustech.dbms2.client.packet.client.ImportTaxRatePacket;
 import cn.edu.sustech.dbms2.client.packet.client.ItemPacket;
 import cn.edu.sustech.dbms2.client.packet.client.ItemWaitForCheckingPacket;
 import cn.edu.sustech.dbms2.client.packet.client.LoadContainerToShipPacket;
 import cn.edu.sustech.dbms2.client.packet.client.LoadItemToContainerPacket;
 import cn.edu.sustech.dbms2.client.packet.client.LoginPacket;
+import cn.edu.sustech.dbms2.client.packet.client.LogoutPacket;
 import cn.edu.sustech.dbms2.client.packet.client.NewItemPacket;
+import cn.edu.sustech.dbms2.client.packet.client.SetItemCheckStatePacket;
 import cn.edu.sustech.dbms2.client.packet.client.SetItemStatePacket;
 import cn.edu.sustech.dbms2.client.packet.client.ShipCountPacket;
 import cn.edu.sustech.dbms2.client.packet.client.ShipPacket;
@@ -27,6 +30,7 @@ import cn.edu.sustech.dbms2.client.packet.server.CompanyCountInfoPacket;
 import cn.edu.sustech.dbms2.client.packet.server.ContainerInfoPacket;
 import cn.edu.sustech.dbms2.client.packet.server.CourierCountInfoPacket;
 import cn.edu.sustech.dbms2.client.packet.server.ExportTaxRateInfoPacket;
+import cn.edu.sustech.dbms2.client.packet.server.GetAllItemsAtPortInfoPacket;
 import cn.edu.sustech.dbms2.client.packet.server.ImportTaxRateInfoPacket;
 import cn.edu.sustech.dbms2.client.packet.server.ItemInfoPacket;
 import cn.edu.sustech.dbms2.client.packet.server.ItemWaitForCheckingInfoPacket;
@@ -34,6 +38,7 @@ import cn.edu.sustech.dbms2.client.packet.server.LoadContainerToShipInfoPacket;
 import cn.edu.sustech.dbms2.client.packet.server.LoadItemToContainerInfoPacket;
 import cn.edu.sustech.dbms2.client.packet.server.LoginInfoPacket;
 import cn.edu.sustech.dbms2.client.packet.server.NewItemInfoPacket;
+import cn.edu.sustech.dbms2.client.packet.server.SetItemCheckStateInfoPacket;
 import cn.edu.sustech.dbms2.client.packet.server.SetItemStateInfoPacket;
 import cn.edu.sustech.dbms2.client.packet.server.ShipCountInfoPacket;
 import cn.edu.sustech.dbms2.client.packet.server.ShipInfoPacket;
@@ -87,6 +92,13 @@ public class PacketManager {
 		packetCodes.put(UnloadItemPacket.getStaticCode(), UnloadItemPacket.class);
 		packetCodes.put(StartShipSailingInfoPacket.getStaticCode(), StartShipSailingInfoPacket.class);
 		packetCodes.put(UnloadItemInfoPacket.getStaticCode(), UnloadItemInfoPacket.class);
+		packetCodes.put(GetAllItemsAtPortPacket.getStaticCode(), GetAllItemsAtPortPacket.class);
+		packetCodes.put(GetAllItemsAtPortInfoPacket.getStaticCode(), GetAllItemsAtPortInfoPacket.class);
+		packetCodes.put(SetItemCheckStatePacket.getStaticCode(), SetItemCheckStatePacket.class);
+		packetCodes.put(SetItemCheckStateInfoPacket.getStaticCode(), SetItemCheckStateInfoPacket.class);
+		packetCodes.put(LogoutPacket.getStaticCode(), LogoutPacket.class);
+
+		
 	}
 	
 	public static PacketManager getInstance() {

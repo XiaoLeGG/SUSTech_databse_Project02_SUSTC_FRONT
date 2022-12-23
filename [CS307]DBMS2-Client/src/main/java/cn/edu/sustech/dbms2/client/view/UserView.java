@@ -26,23 +26,37 @@ import cn.edu.sustech.dbms2.client.packet.client.CityCountPacket;
 import cn.edu.sustech.dbms2.client.packet.client.CompanyCountPacket;
 import cn.edu.sustech.dbms2.client.packet.client.ContainerPacket;
 import cn.edu.sustech.dbms2.client.packet.client.CourierCountPacket;
+import cn.edu.sustech.dbms2.client.packet.client.ExportTaxRatePacket;
+import cn.edu.sustech.dbms2.client.packet.client.ImportTaxRatePacket;
 import cn.edu.sustech.dbms2.client.packet.client.ItemPacket;
+import cn.edu.sustech.dbms2.client.packet.client.ItemWaitForCheckingPacket;
+import cn.edu.sustech.dbms2.client.packet.client.LoadContainerToShipPacket;
+import cn.edu.sustech.dbms2.client.packet.client.LoadItemToContainerPacket;
 import cn.edu.sustech.dbms2.client.packet.client.NewItemPacket;
 import cn.edu.sustech.dbms2.client.packet.client.SetItemStatePacket;
 import cn.edu.sustech.dbms2.client.packet.client.ShipCountPacket;
 import cn.edu.sustech.dbms2.client.packet.client.ShipPacket;
 import cn.edu.sustech.dbms2.client.packet.client.StaffPacket;
+import cn.edu.sustech.dbms2.client.packet.client.StartShipSailingPacket;
+import cn.edu.sustech.dbms2.client.packet.client.UnloadItemPacket;
 import cn.edu.sustech.dbms2.client.packet.server.CityCountInfoPacket;
 import cn.edu.sustech.dbms2.client.packet.server.CompanyCountInfoPacket;
 import cn.edu.sustech.dbms2.client.packet.server.ContainerInfoPacket;
 import cn.edu.sustech.dbms2.client.packet.server.CourierCountInfoPacket;
+import cn.edu.sustech.dbms2.client.packet.server.ExportTaxRateInfoPacket;
+import cn.edu.sustech.dbms2.client.packet.server.ImportTaxRateInfoPacket;
 import cn.edu.sustech.dbms2.client.packet.server.ItemInfoPacket;
+import cn.edu.sustech.dbms2.client.packet.server.ItemWaitForCheckingInfoPacket;
+import cn.edu.sustech.dbms2.client.packet.server.LoadContainerToShipInfoPacket;
+import cn.edu.sustech.dbms2.client.packet.server.LoadItemToContainerInfoPacket;
 import cn.edu.sustech.dbms2.client.packet.server.LoginInfoPacket;
 import cn.edu.sustech.dbms2.client.packet.server.NewItemInfoPacket;
 import cn.edu.sustech.dbms2.client.packet.server.SetItemStateInfoPacket;
 import cn.edu.sustech.dbms2.client.packet.server.ShipCountInfoPacket;
 import cn.edu.sustech.dbms2.client.packet.server.ShipInfoPacket;
 import cn.edu.sustech.dbms2.client.packet.server.StaffInfoPacket;
+import cn.edu.sustech.dbms2.client.packet.server.StartShipSailingInfoPacket;
+import cn.edu.sustech.dbms2.client.packet.server.UnloadItemInfoPacket;
 import cn.edu.sustech.dbms2.client.interfaces.ContainerInfo;
 import cn.edu.sustech.dbms2.client.interfaces.ItemInfo;
 import cn.edu.sustech.dbms2.client.interfaces.ShipInfo;
@@ -104,7 +118,10 @@ public class UserView {
 		dialog.setTransitionType(DialogTransition.CENTER);
 		JFXDialogLayout layout = new JFXDialogLayout();
 		layout.setHeading(new Label(isWarning ? "出错" : "成功"));
-		layout.setBody(new Label(text));
+		TextFlow textFlow = new TextFlow();
+		Text t = new Text(text);
+		textFlow.getChildren().add(t);
+		layout.setBody(textFlow);
 		JFXButton closeButton = new JFXButton(isWarning ? "关闭" : "确认");
 		closeButton.setStyle("-fx-text-fill: " + (isWarning ? "#FF0000" : "SKYBLUE"));
 		closeButton.setOnAction(event -> {
@@ -532,6 +549,352 @@ public class UserView {
 		
 	}
 	
+	public void initCompanyManagerBoard(HBox hbox, StackPane top) {
+		StackPane leftPane = new StackPane();
+		leftPane.getStylesheets().add(getClass().getResource("/css/userview.css").toExternalForm());
+		leftPane.setPrefHeight(550);
+		leftPane.setPrefWidth(590);
+		leftPane.setStyle("-fx-background-color: WHITE");
+		leftPane.setPadding(new Insets(30, 0, 0, 30));
+		JFXDepthManager.setDepth(leftPane, 4);
+		hbox.getChildren().add(leftPane);
+		
+		HBox leftHBox = new HBox();
+		leftHBox.setPrefWidth(540);
+		leftHBox.setPrefHeight(500);
+		
+		VBox leftBox = new VBox();
+		leftBox.setPrefWidth(270);
+		leftBox.setPrefHeight(500);
+		leftBox.setSpacing(20);
+		
+		VBox importTaxVBox = new VBox();
+		importTaxVBox.setSpacing(5);
+		JFXButton importTaxButton = new JFXButton("查询进口税率");
+		
+		HBox importTaxBox = new HBox();
+		TextFlow importTax = new TextFlow();
+		Text importTaxName = new Text("进口城市: ");
+		importTaxName.setStyle("-fx-font-weight: bold; -fx-font-size: 14");
+		importTax.getChildren().add(importTaxName);
+		JFXTextField importTaxCityField = new JFXTextField();
+		ValidatorBase importTaxCityValid = new RequiredFieldValidator("进口城市不能为空");
+		FontIcon importTaxTri = new FontIcon();
+		importTaxTri.setIconLiteral("fas-exclamation-triangle");
+		importTaxCityValid.setIcon(importTaxTri);
+		importTaxCityField.setValidators(importTaxCityValid);
+		importTaxBox.getChildren().addAll(importTax, importTaxCityField);
+		
+		HBox importTaxItemBox = new HBox();
+		TextFlow importTaxItem = new TextFlow();
+		Text importTaxItemName = new Text("物品类型: ");
+		importTaxItemName.setStyle("-fx-font-weight: bold; -fx-font-size: 14");
+		importTaxItem.getChildren().add(importTaxItemName);
+		JFXTextField importTaxItemField = new JFXTextField();
+		ValidatorBase importTaxItemValid = new RequiredFieldValidator("物品类型不能为空");
+		FontIcon importTaxItemTri = new FontIcon();
+		importTaxItemTri.setIconLiteral("fas-exclamation-triangle");
+		importTaxItemValid.setIcon(importTaxItemTri);
+		importTaxItemField.setValidators(importTaxItemValid);
+		importTaxItemBox.getChildren().addAll(importTaxItem, importTaxItemField);
+		importTaxButton.setOnAction(e -> {
+			if (importTaxCityField.validate() && importTaxItemField.validate()) {
+				DBClient client = new DBClient();
+				try {
+					ImportTaxRateInfoPacket packet = (ImportTaxRateInfoPacket) client.sendAndReceivePacket(new ImportTaxRatePacket(this.cookie, importTaxCityField.getText(), importTaxItemField.getText()));
+					if (Math.abs(packet.getRate() + 1) >= 1e-8 ) {
+						showDialog("物品类型 " + importTaxItemField.getText() + " 在城市 " + importTaxCityField.getText() + " 的税率为 " + String.format("%,.2f", packet.getRate()), top, false);
+					} else {
+						showDialog("查询失败", top ,true);
+					}
+				} catch (IOException e1) {
+					showDialog("查询失败", top ,true);
+				}
+			}
+		});
+		
+		importTaxVBox.getChildren().addAll(importTaxButton, importTaxBox, importTaxItemBox);
+		leftBox.getChildren().add(importTaxVBox);
+		
+		VBox exportTaxVBox = new VBox();
+		exportTaxVBox.setSpacing(5);
+		JFXButton exportTaxButton = new JFXButton("查询出口税率");
+		
+		HBox exportTaxBox = new HBox();
+		TextFlow exportTax = new TextFlow();
+		Text exportTaxName = new Text("出口城市: ");
+		exportTaxName.setStyle("-fx-font-weight: bold; -fx-font-size: 14");
+		exportTax.getChildren().add(exportTaxName);
+		JFXTextField exportTaxCityField = new JFXTextField();
+		ValidatorBase exportTaxCityValid = new RequiredFieldValidator("出口城市不能为空");
+		FontIcon exportTaxTri = new FontIcon();
+		exportTaxTri.setIconLiteral("fas-exclamation-triangle");
+		exportTaxCityValid.setIcon(exportTaxTri);
+		exportTaxCityField.setValidators(exportTaxCityValid);
+		exportTaxBox.getChildren().addAll(exportTax, exportTaxCityField);
+		
+		HBox exportTaxItemBox = new HBox();
+		TextFlow exportTaxItem = new TextFlow();
+		Text exportTaxItemName = new Text("物品类型: ");
+		exportTaxItemName.setStyle("-fx-font-weight: bold; -fx-font-size: 14");
+		exportTaxItem.getChildren().add(exportTaxItemName);
+		JFXTextField exportTaxItemField = new JFXTextField();
+		ValidatorBase exportTaxItemValid = new RequiredFieldValidator("物品类型不能为空");
+		FontIcon exportTaxItemTri = new FontIcon();
+		exportTaxItemTri.setIconLiteral("fas-exclamation-triangle");
+		exportTaxItemValid.setIcon(exportTaxItemTri);
+		exportTaxItemField.setValidators(exportTaxItemValid);
+		exportTaxItemBox.getChildren().addAll(exportTaxItem, exportTaxItemField);
+		exportTaxButton.setOnAction(e -> {
+			if (exportTaxCityField.validate() && exportTaxItemField.validate()) {
+				DBClient client = new DBClient();
+				try {
+					ExportTaxRateInfoPacket packet = (ExportTaxRateInfoPacket) client.sendAndReceivePacket(new ExportTaxRatePacket(this.cookie, exportTaxCityField.getText(), exportTaxItemField.getText()));
+					if (Math.abs(packet.getRate() + 1) >= 1e-8 ) {
+						showDialog("物品类型 " + exportTaxItemField.getText() + " 在城市 " + exportTaxCityField.getText() + " 的税率为 " + String.format("%,.2f", packet.getRate()), top, false);
+					} else {
+						showDialog("查询失败", top ,true);
+					}
+				} catch (IOException e1) {
+					showDialog("查询失败", top ,true);
+				}
+			}
+		});
+		
+		exportTaxVBox.getChildren().addAll(exportTaxButton, exportTaxBox, exportTaxItemBox);
+		leftBox.getChildren().add(exportTaxVBox);
+		
+		VBox iwfVBox = new VBox();
+		iwfVBox.setSpacing(5);
+		JFXButton iwfButton = new JFXButton("设置项目等待检查");
+		
+		HBox iwfBox = new HBox();
+		TextFlow iwf = new TextFlow();
+		Text iwfName = new Text("项目名称: ");
+		iwfName.setStyle("-fx-font-weight: bold; -fx-font-size: 14");
+		iwf.getChildren().add(iwfName);
+		JFXTextField iwfField = new JFXTextField();
+		ValidatorBase iwfValid = new RequiredFieldValidator("项目名称不能为空");
+		FontIcon iwfTri = new FontIcon();
+		iwfTri.setIconLiteral("fas-exclamation-triangle");
+		iwfValid.setIcon(iwfTri);
+		iwfField.setValidators(iwfValid);
+		iwfBox.getChildren().addAll(iwf, iwfField);
+		iwfButton.setOnAction(e -> {
+			if (iwfField.validate()) {
+				DBClient client = new DBClient();
+				try {
+					ItemWaitForCheckingInfoPacket packet = (ItemWaitForCheckingInfoPacket) client.sendAndReceivePacket(new ItemWaitForCheckingPacket(this.cookie, iwfField.getText()));
+					if (packet.isSuccess()) {
+						this.showDialog("设置成功", top, false);
+					} else {
+						this.showDialog("设置失败", top, true);
+					}
+				} catch (IOException e1) {
+					this.showDialog("设置失败", top, true);
+				}
+				
+			}
+		});
+		iwfVBox.getChildren().addAll(iwfButton, iwfBox);
+		leftBox.getChildren().add(iwfVBox);
+		
+		VBox lctsVBox = new VBox();
+		lctsVBox.setSpacing(5);
+		JFXButton lctsButton = new JFXButton("装载容器到轮船");
+		
+		HBox lctsBox = new HBox();
+		TextFlow lcts = new TextFlow();
+		Text lctsName = new Text("容器代码: ");
+		lctsName.setStyle("-fx-font-weight: bold; -fx-font-size: 14");
+		lcts.getChildren().add(lctsName);
+		JFXTextField lctsCityField = new JFXTextField();
+		ValidatorBase lctsCityValid = new RequiredFieldValidator("容器代码不能为空");
+		FontIcon lctsTri = new FontIcon();
+		lctsTri.setIconLiteral("fas-exclamation-triangle");
+		lctsCityValid.setIcon(lctsTri);
+		lctsCityField.setValidators(lctsCityValid);
+		lctsBox.getChildren().addAll(lcts, lctsCityField);
+		
+		HBox lctsShipBox = new HBox();
+		TextFlow lctsShip = new TextFlow();
+		Text lctsShipName = new Text("轮船名称: ");
+		lctsShipName.setStyle("-fx-font-weight: bold; -fx-font-size: 14");
+		lctsShip.getChildren().add(lctsShipName);
+		JFXTextField lctsShipField = new JFXTextField();
+		ValidatorBase lctsShipValid = new RequiredFieldValidator("轮船名称不能为空");
+		FontIcon lctsShipTri = new FontIcon();
+		lctsShipTri.setIconLiteral("fas-exclamation-triangle");
+		lctsShipValid.setIcon(lctsShipTri);
+		lctsShipField.setValidators(lctsShipValid);
+		lctsShipBox.getChildren().addAll(lctsShip, lctsShipField);
+		lctsButton.setOnAction(e -> {
+			if (lctsCityField.validate() && lctsShipField.validate()) {
+				DBClient client = new DBClient();
+				try {
+					LoadContainerToShipInfoPacket packet = (LoadContainerToShipInfoPacket) client.sendAndReceivePacket(new LoadContainerToShipPacket(this.cookie, lctsCityField.getText(), lctsShipField.getText()));
+					if (packet.isSuccess()) {
+						showDialog("装载成功", top ,false);
+					} else {
+						showDialog("装载失败", top ,true);
+					}
+				} catch (IOException e1) {
+					showDialog("装载失败", top ,true);
+				}
+			}
+		});
+		
+		lctsVBox.getChildren().addAll(lctsButton, lctsBox, lctsShipBox);
+		leftBox.getChildren().add(lctsVBox);
+		
+		
+		
+		VBox litcVBox = new VBox();
+		litcVBox.setSpacing(5);
+		JFXButton litcButton = new JFXButton("装载项目到容器");
+		
+		HBox litcBox = new HBox();
+		TextFlow litc = new TextFlow();
+		Text litcName = new Text("项目名称: ");
+		litcName.setStyle("-fx-font-weight: bold; -fx-font-size: 14");
+		litc.getChildren().add(litcName);
+		JFXTextField litcCityField = new JFXTextField();
+		ValidatorBase litcCityValid = new RequiredFieldValidator("项目名称不能为空");
+		FontIcon litcTri = new FontIcon();
+		litcTri.setIconLiteral("fas-exclamation-triangle");
+		litcCityValid.setIcon(litcTri);
+		litcCityField.setValidators(litcCityValid);
+		litcBox.getChildren().addAll(litc, litcCityField);
+		
+		HBox litcShipBox = new HBox();
+		TextFlow litcShip = new TextFlow();
+		Text litcShipName = new Text("容器代码: ");
+		litcShipName.setStyle("-fx-font-weight: bold; -fx-font-size: 14");
+		litcShip.getChildren().add(litcShipName);
+		JFXTextField litcShipField = new JFXTextField();
+		ValidatorBase litcShipValid = new RequiredFieldValidator("容器代码不能为空");
+		FontIcon litcShipTri = new FontIcon();
+		litcShipTri.setIconLiteral("fas-exclamation-triangle");
+		litcShipValid.setIcon(litcShipTri);
+		litcShipField.setValidators(litcShipValid);
+		litcShipBox.getChildren().addAll(litcShip, litcShipField);
+		litcButton.setOnAction(e -> {
+			if (litcCityField.validate() && litcShipField.validate()) {
+				DBClient client = new DBClient();
+				try {
+					LoadItemToContainerInfoPacket packet = (LoadItemToContainerInfoPacket) client.sendAndReceivePacket(new LoadItemToContainerPacket(this.cookie, litcCityField.getText(), litcShipField.getText()));
+					if (packet.isSuccess()) {
+						showDialog("装载成功", top ,false);
+					} else {
+						showDialog("装载失败", top ,true);
+					}
+				} catch (IOException e1) {
+					showDialog("装载失败", top ,true);
+				}
+			}
+		});
+		
+		litcVBox.getChildren().addAll(litcButton, litcBox, litcShipBox);
+		leftBox.getChildren().add(litcVBox);
+		
+		VBox leftBox2 = new VBox();
+		leftBox2.setPrefWidth(270);
+		leftBox2.setPrefHeight(500);
+		leftBox2.setSpacing(20);
+		
+		VBox sssVBox = new VBox();
+		sssVBox.setSpacing(5);
+		JFXButton sssButton = new JFXButton("轮船起航");
+		
+		HBox sssBox = new HBox();
+		TextFlow sss = new TextFlow();
+		Text sssName = new Text("轮船名称: ");
+		sssName.setStyle("-fx-font-weight: bold; -fx-font-size: 14");
+		sss.getChildren().add(sssName);
+		JFXTextField sssField = new JFXTextField();
+		ValidatorBase sssValid = new RequiredFieldValidator("轮船名称不能为空");
+		FontIcon sssTri = new FontIcon();
+		sssTri.setIconLiteral("fas-exclamation-triangle");
+		sssValid.setIcon(sssTri);
+		sssField.setValidators(sssValid);
+		sssBox.getChildren().addAll(sss, sssField);
+		sssButton.setOnAction(e -> {
+			if (sssField.validate()) {
+				DBClient client = new DBClient();
+				try {
+					StartShipSailingInfoPacket packet = (StartShipSailingInfoPacket) client.sendAndReceivePacket(new StartShipSailingPacket(this.cookie, sssField.getText()));
+					if (packet.isSuccess()) {
+						this.showDialog("扬帆起航！", top, false);
+					} else {
+						this.showDialog("设置失败", top, true);
+					}
+				} catch (IOException e1) {
+					this.showDialog("设置失败", top, true);
+				}
+				
+			}
+		});
+		sssVBox.getChildren().addAll(sssButton, sssBox);
+		leftBox2.getChildren().add(sssVBox);
+		
+		VBox uiVBox = new VBox();
+		uiVBox.setSpacing(5);
+		JFXButton uiButton = new JFXButton("卸载项目");
+		
+		HBox uiBox = new HBox();
+		TextFlow ui = new TextFlow();
+		Text uiName = new Text("项目名称: ");
+		uiName.setStyle("-fx-font-weight: bold; -fx-font-size: 14");
+		ui.getChildren().add(uiName);
+		JFXTextField uiField = new JFXTextField();
+		ValidatorBase uiValid = new RequiredFieldValidator("项目名称不能为空");
+		FontIcon uiTri = new FontIcon();
+		uiTri.setIconLiteral("fas-exclamation-triangle");
+		uiValid.setIcon(uiTri);
+		uiField.setValidators(uiValid);
+		uiBox.getChildren().addAll(ui, uiField);
+		uiButton.setOnAction(e -> {
+			if (uiField.validate()) {
+				DBClient client = new DBClient();
+				try {
+					UnloadItemInfoPacket packet = (UnloadItemInfoPacket) client.sendAndReceivePacket(new UnloadItemPacket(this.cookie, uiField.getText()));
+					if (packet.isSuccess()) {
+						this.showDialog("卸载成功", top, false);
+					} else {
+						this.showDialog("卸载失败", top, true);
+					}
+				} catch (IOException e1) {
+					this.showDialog("卸载失败", top, true);
+				}
+				
+			}
+		});
+		uiVBox.getChildren().addAll(uiButton, uiBox);
+		leftBox2.getChildren().add(uiVBox);
+		
+		leftHBox.getChildren().addAll(leftBox, leftBox2);
+		leftPane.getChildren().add(leftHBox);
+		
+	}
+	
+	public void initSeaportManagerBoard(HBox hbox, StackPane top) {
+		StackPane leftPane = new StackPane();
+		leftPane.getStylesheets().add(getClass().getResource("/css/userview.css").toExternalForm());
+		leftPane.setPrefHeight(550);
+		leftPane.setPrefWidth(590);
+		leftPane.setStyle("-fx-background-color: WHITE");
+		leftPane.setPadding(new Insets(30, 0, 0, 30));
+		JFXDepthManager.setDepth(leftPane, 4);
+		hbox.getChildren().add(leftPane);
+		
+		VBox leftBox = new VBox();
+		leftBox.setPrefWidth(540);
+		leftBox.setPrefHeight(500);
+		leftBox.setSpacing(20);
+		
+		
+	}
+	
 	public void initCourierManagerBoard(HBox hbox, StackPane top) {
 		StackPane leftPane = new StackPane();
 		leftPane.getStylesheets().add(getClass().getResource("/css/userview.css").toExternalForm());
@@ -928,7 +1291,7 @@ public class UserView {
 			this.initSustcManagerBoard(hbox, top);
 		}
 		if (this.staffType.startsWith("Company")) {
-			
+			this.initCompanyManagerBoard(hbox, top);
 		}
 		if (this.staffType.startsWith("Courier")) {
 			this.initCourierManagerBoard(hbox, top);
@@ -936,8 +1299,6 @@ public class UserView {
 		if (this.staffType.startsWith("Seaport")) {
 			
 		}
-		
-		
 		
 		StackPane rightPane = new StackPane();
 		rightPane.setPrefHeight(550);

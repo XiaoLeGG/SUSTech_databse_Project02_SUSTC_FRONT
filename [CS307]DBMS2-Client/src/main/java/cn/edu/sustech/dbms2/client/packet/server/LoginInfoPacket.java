@@ -53,7 +53,7 @@ public class LoginInfoPacket extends Packet {
 		this.user = this.info[2];
 		this.staffType = this.info[3];
 		this.city = this.info[4].equals("@null@") ? null : this.info[4];
-		this.company = this.info[5].equals("@null@") ? null : this.info[4];
+		this.company = this.info[5].equals("@null@") ? null : this.info[5];
 		this.gender = Boolean.parseBoolean(this.info[6]);
 		this.phone = this.info[7];
 		this.age = Integer.parseInt(this.info[8]);

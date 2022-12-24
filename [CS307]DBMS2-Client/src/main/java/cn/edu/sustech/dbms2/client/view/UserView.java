@@ -1034,7 +1034,7 @@ public class UserView {
 
 		VBox sicsVBox = new VBox();
 		sicsVBox.setSpacing(5);
-		JFXButton sicsButton = new JFXButton("查询进口税率");
+		JFXButton sicsButton = new JFXButton("设置项目检查状态");
 
 		HBox sicsItemBox = new HBox();
 		TextFlow sicsItem = new TextFlow();

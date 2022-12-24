@@ -84,6 +84,8 @@ public class PacketManager {
 		packetCodes.put(ImportTaxRateInfoPacket.getStaticCode(), ImportTaxRateInfoPacket.class);
 		packetCodes.put(ExportTaxRatePacket.getStaticCode(), ExportTaxRatePacket.class);
 		packetCodes.put(ExportTaxRateInfoPacket.getStaticCode(), ExportTaxRateInfoPacket.class);
+		packetCodes.put(ItemWaitForCheckingPacket.getStaticCode(), ItemWaitForCheckingPacket.class);
+		packetCodes.put(ItemWaitForCheckingInfoPacket.getStaticCode(), ItemWaitForCheckingInfoPacket.class);
 		packetCodes.put(LoadContainerToShipPacket.getStaticCode(), LoadContainerToShipPacket.class);
 		packetCodes.put(LoadContainerToShipInfoPacket.getStaticCode(), LoadContainerToShipInfoPacket.class);
 		packetCodes.put(LoadItemToContainerPacket.getStaticCode(), LoadItemToContainerPacket.class);

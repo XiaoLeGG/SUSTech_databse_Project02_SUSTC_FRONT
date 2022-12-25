@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -39,6 +40,7 @@ public class DBClient {
 			}
 			host = pro.getProperty("HOST");
 			port = Integer.parseInt(pro.getProperty("PORT"));
+			pro.store(new FileOutputStream(file), "Have fun");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

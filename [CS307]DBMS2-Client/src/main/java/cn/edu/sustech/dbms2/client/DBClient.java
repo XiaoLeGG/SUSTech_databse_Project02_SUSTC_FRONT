@@ -2,18 +2,49 @@ package cn.edu.sustech.dbms2.client;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.Properties;
 
 import cn.edu.sustech.dbms2.client.packet.Packet;
 import cn.edu.sustech.dbms2.client.packet.PacketManager;
 
 public class DBClient {
 	
-	private static final String host = "127.0.0.1";
-	private static final int port = 23333;
+	private static String host;
+	private static int port;
+	
+	static {
+		File file = new File("config.properties");
+		if (!file.exists()) {
+			try {
+				file.createNewFile();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}		
+		}
+		Properties pro = new Properties();
+		try {
+			pro.load(new FileInputStream(file));
+			if (pro.get("HOST") == null) {
+				pro.setProperty("HOST", "127.0.0.1");
+			}
+			if (pro.get("PORT") == null) {
+				pro.setProperty("PORT", "23333");
+			}
+			host = pro.getProperty("HOST");
+			port = Integer.parseInt(pro.getProperty("PORT"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
+	}
 	
 	public DBClient() {}
 	
